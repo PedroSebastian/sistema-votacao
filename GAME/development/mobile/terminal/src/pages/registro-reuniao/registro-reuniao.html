@@ -1,0 +1,46 @@
+<!--
+  Generated template for the RegistroReuniaoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Registrar na Reunião</ion-title>
+    <ion-buttons style="margin: 0 0.4rem;" start>
+      <button ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <div *ngIf="carregado">
+    <h2>{{ reuniaoDados.reuniao.descricao }}</h2>
+  </div>
+
+  <div class="top-margin">
+    <ion-list>
+      <ion-item>
+        <ion-label min="2" color="primary">Token de Acesso</ion-label>
+        <ion-input [(ngModel)]="tokenMembro" placeholder="Informe o seu token de acesso para conectar-se na reunião"></ion-input>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="top-margin">
+    <button [disabled]="tokenMembro == '' || tokenMembro == null" (click)="entrarNaReniao()" color="primary" ion-button
+            full>Efetuar Registro
+    </button>
+
+    <!--<button (click)="entrarNaReniao()" color="primary" ion-button-->
+            <!--full>Efetuar Registro-->
+    <!--</button>-->
+  </div>
+
+</ion-content>

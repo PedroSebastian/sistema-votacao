@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+             xmlns:f="http://xmlns.jcp.org/jsf/core"
+             xmlns:p="http://java.sun.com/jsf/html"
+             template="template.xhtml"
+             xmlns:prime="http://primefaces.org/ui"
+             xmlns:b="http://bootsfaces.net/ui">
+
+    <b:container>
+        <b:row>
+
+            <b:column col-md="8" offset="2">
+                <b:panel styleClass="app-panel">
+                    <h:form id="form">
+                        <prime:growl id="growl" showDetail="true" sticky="true"/>
+
+                        <b:column col-md="10" offset="1">
+                            <b:row class="head">
+                                <b:column>
+                                    <h2 class="app-h2">Disponibilizar Item de Pauta</h2>
+                                </b:column>
+                                <b:column col-md="10" offset="1">
+                                    <p class="app-h2-description bottom-30">Disponibilize um item de pauta para ser votado pelos membros da sua comissão</p>
+                                </b:column>
+                            </b:row>
+
+                            <b:row>
+                                <b:column styleClass="text-campo">
+                                    <p class="required-txt bottom-30">* Campos obrigatórios</p>
+                                </b:column>
+                            </b:row>
+
+                            <b:row>
+                                <b:column>
+                                    <h:outputLabel styleClass="app-label" value="Descrição do Item"></h:outputLabel>
+                                </b:column>
+                                <b:column>
+                                    <ul>
+                                        <li>
+                                            <p class="app-label-description bottom-30"><h:outputText
+                                                    value="#{encaminhamentosBean.itemDePauta.descricao}"></h:outputText>
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </b:column>
+                            </b:row>
+
+                            <b:row>
+                                <b:column>
+                                    <h:outputLabel styleClass="app-label" value="Relator"></h:outputLabel>
+                                </b:column>
+                                <b:column>
+                                    <ul>
+                                        <li>
+                                            <p class="app-label-description bottom-30"><h:outputText
+                                                    value="#{encaminhamentosBean.itemDePauta.relator}"></h:outputText>
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </b:column>
+                            </b:row>
+
+
+                            <b:row>
+                                <b:column>
+                                    <h:outputLabel styleClass="app-label"
+                                                   value="Tipos de Encaminhamento *"></h:outputLabel>
+                                </b:column>
+                                <b:column>
+                                    <p class="app-label-description bottom-30">Selecione o tipo de encaminhamento padrão ou customizado</p>
+                                </b:column>
+                                <b:column colMd="6" styleClass="bottom-30">
+                                    <div>
+                                        <h:commandLink action="#{encaminhamentosBean.selecionaOpcaoPadrao}"
+                                                       styleClass="app-option default" value="PADRÃO">
+                                            <f:ajax action="#{encaminhamentosBean.selecionaOpcaoPadrao}"
+                                                    render="@form"></f:ajax>
+                                        </h:commandLink>
+                                    </div>
+                                </b:column>
+                                <b:column colMd="6" styleClass="bottom-30">
+                                    <div>
+                                        <h:commandLink action="#{encaminhamentosBean.selecionaOpcaoCustomizado}"
+                                                       styleClass="app-option custom" value="CUSTOMIZADO">
+                                            <f:ajax event="click"
+                                                    listener="#{encaminhamentosBean.selecionaOpcaoCustomizado}"
+                                                    render="@form"></f:ajax>
+                                        </h:commandLink>
+                                    </div>
+                                </b:column>
+                                <b:column id="txt-customizado" rendered="#{encaminhamentosBean.selecionaCustomizado}">
+                                    <p class="app-label-description bottom-30"
+                                       id="text-custom">No Encaminhamento Customizado você deve inserir as opções de voto, sendo a opção
+                                        <b>Abstenção</b> adicionada automaticamente ao disponibiizar o item:</p>
+                                </b:column>
+                                <b:column id="txt-padrao" rendered="#{encaminhamentosBean.selecionaPadrao}">
+                                    <p class="app-label-description bottom-30">No Encaminhamento Padrão as opções de voto são:</p>
+                                </b:column>
+                            </b:row>
+
+                            <b:row id="padrao" rendered="#{encaminhamentosBean.selecionaPadrao}" styleClass="bottom-30">
+                                <b:column col-md="3">
+                                    <h:outputLabel styleClass="label-opt-padrao" value="Favorável"></h:outputLabel>
+                                </b:column>
+                                <b:column col-md="3">
+                                    <h:outputLabel styleClass="label-opt-padrao" value="Contrário"></h:outputLabel>
+                                </b:column>
+                                <b:column col-md="3">
+                                    <h:outputLabel styleClass="label-opt-padrao" value="Abstenção"></h:outputLabel>
+                                </b:column>
+                            </b:row>
+
+                            <b:row id="customizado" rendered="#{encaminhamentosBean.selecionaCustomizado}">
+                                <b:column>
+                                    <h:outputLabel styleClass="app-label" value="Opção de Voto *"></h:outputLabel>
+                                </b:column>
+                                <b:column>
+                                    <p class="app-label-description">Adicione suas opções de voto para o item de pauta</p>
+                                </b:column>
+                                <b:column colMd="10">
+                                    <b:inputText id="input-opt" value="#{encaminhamentosBean.opcaoCustomizada}"
+                                                 styleClass="app-input bottom-30"
+                                                 onchange="ajax:itemDePautaBean.opcaoCustomizada">
+                                    </b:inputText>
+                                </b:column>
+                                <b:column colMd="2">
+                                    <b:commandButton styleClass="btn-add" icon="plus" iconSize="2x">
+                                        <f:ajax event="click"
+                                                listener="#{encaminhamentosBean.addOpcao}"
+                                                render="form:input-opt, form:opt-lista, form:growl"></f:ajax>
+                                    </b:commandButton>
+                                </b:column>
+                            </b:row>
+
+
+                            <b:row id="data-customizado" rendered="#{encaminhamentosBean.selecionaCustomizado}"
+                                   styleClass="bottom-30">
+                                <b:column styleClass="bottom-30">
+                                    <prime:dataList id="opt-lista" emptyMessage="Nenhum item adicionado."
+                                                    value="#{encaminhamentosBean.itemDePauta.encaminhamentos}"
+                                                    var="opt"
+                                                    type="ordered" styleClass="encaminhamentos-itens">
+                                        <f:facet name="header">
+                                            OPÇÕES
+                                        </f:facet>
+                                        <span class="opt-item">#{opt.descricao}</span>
+
+                                        <b:commandButton styleClass="excluir-item" value="X">
+                                            <f:ajax event="click"
+                                                    listener="#{encaminhamentosBean.removeOpcao(opt)}"
+                                                    render="form:opt-lista"></f:ajax>
+                                        </b:commandButton>
+                                    </prime:dataList>
+                                </b:column>
+
+
+                                <b:row>
+                                    <b:column>
+                                            <b:column styleClass="bottom-30">
+                                                <h:outputLabel for="segundo-turno" styleClass="app-label"
+                                                               value="Votação com Segundo Turno? *"></h:outputLabel>
+
+                                                <div class="pretty p-switch p-fill" style="margin-left: 20px">
+                                                    <h:selectBooleanCheckbox id="segundo-turno"
+                                                                             value="#{encaminhamentosBean.itemDePauta.temSegundoTurno}">
+                                                        <prime:ajax
+                                                                update="form:segundo-turno-label, form:segundo-turno"
+                                                                event="change" process="@form"></prime:ajax>
+                                                    </h:selectBooleanCheckbox>
+                                                    <div class="state p-success">
+                                                        <h:outputLabel id="segundo-turno-label"
+                                                                       value="#{encaminhamentosBean.itemDePauta.temSegundoTurno ? 'Sim' : 'Não'}">
+                                                        </h:outputLabel>
+                                                    </div>
+                                                </div>
+                                            </b:column>
+                                    </b:column>
+                                </b:row>
+                            </b:row>
+
+
+                            <b:row>
+                                <b:modal id="confirma-encaminhamento" title="Confirmar Encaminhamento"
+                                         styleClass="modalConfirmaEncaminhamento"
+                                         closable="false" close-on-escape="false" backdrop="false">
+                                    <p>Deseja emcaminhar o Item de Pauta para votação?
+                                    </p>
+                                    <f:facet name="footer">
+                                        <b:commandButton action="#{encaminhamentosBean.encaminharItemDePauta}" includeViewParams="true"
+                                                         class="" value="Encaminhar">
+                                            <f:param name="item" value="#{encaminhamentosBean.itemDePauta.id}" />
+                                        </b:commandButton>
+                                        <b:button value="Fechar" dismiss="modal"/>
+                                    </f:facet>
+                                </b:modal>
+
+                                <b:modal id="confirma-cancelamento" title="Cancelar"
+                                         styleClass="modalCancelar"
+                                         closable="false" close-on-escape="false" backdrop="false">
+                                    <p>Deseja realmente cancelar?</p>
+                                    <f:facet name="footer">
+                                        <b:link class="btn btn-default button2" value="Cancelar" includeViewParams="true"
+                                                  outcome="itens-de-pauta">
+                                            <f:param name="reuniao" value="#{encaminhamentosBean.itemDePauta.reuniao.id}"></f:param>
+                                        </b:link>
+                                        <b:button value="Fechar" dismiss="modal"/>
+                                    </f:facet>
+                                </b:modal>
+
+                                <b:column colMd="6">
+                                    <b:button styleClass="button1 bottom-30" value="Encaminhar" look="success"
+                                              onclick="$('.modalConfirmaEncaminhamento').modal()"/>
+                                </b:column>
+                                <b:column colMd="6">
+                                    <b:button styleClass="button1 bottom-30" value="Cancelar" look="default"
+                                              onclick="$('.modalCancelar').modal()"/>
+                                </b:column>
+                            </b:row>
+                        </b:column>
+                    </h:form>
+                </b:panel>
+            </b:column>
+
+        </b:row>
+
+    </b:container>
+
+</ui:decorate>
+</html>

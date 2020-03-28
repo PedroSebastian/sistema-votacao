@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+             xmlns:f="http://xmlns.jcp.org/jsf/core"
+             xmlns:p="http://java.sun.com/jsf/html"
+             template="template.xhtml"
+             xmlns:prime="http://primefaces.org/ui"
+             xmlns:b="http://bootsfaces.net/ui">
+
+    <style>
+        .turnos {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            /*background-color: #333;*/
+        }
+
+        .turnos-item {
+            float: left;
+            margin-right: 15px;
+        }
+
+        .turnos-item .botao-turno {
+            display: block;
+            color: #333;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+
+            border-radius: 15%;
+
+            background-color: #e0ded7;
+        }
+
+        .turnos-item .botao-turno:hover {
+            background-color: #56b657;
+        }
+
+        .resultado {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .resultado td, .resultado th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .resultado td {
+            text-align: center;
+        }
+
+        .resultado tr:hover {
+            background-color: #d9d9d9;
+        }
+
+        .resultado th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color: #eeeeee;
+            color: rgba(0, 0, 0, 0.99);
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .bottom-15 {
+            margin-bottom: 15px !important;
+        }
+
+    </style>
+    <b:container>
+        <prime:growl id="msj" widgetVar="wmsj" showDetail="true"></prime:growl>
+
+        <prime:socket onMessage="handleMessage" channel="/votacao-finalizada">
+            <prime:ajax event="message" listener="#{votacaoBean.exibeResultado()}" update="form"/>
+        </prime:socket>
+
+        <script type="text/javascript">
+            function handleMessage(facesmessage) {
+                facesmessage.severity = 'info';
+
+                PF('wmsj').show([facesmessage]);
+            }
+        </script>
+
+        <b:row>
+
+            <b:column col-md="8" offset="2">
+                <b:panel styleClass="app-panel">
+                    <h:form id="form">
+                        <prime:growl id="growl" showDetail="true" sticky="true"/>
+
+                        <b:column col-md="10" offset="1">
+                            <b:row class="head">
+                                <b:column>
+                                    <h2 class="app-h2">#{votacaoBean.titulo}</h2>
+                                </b:column>
+                                <b:column col-md="10" offset="1">
+                                    <p class="app-h2-description bottom-30">Aguarde até o último membro votar para visualizar o resultado da votação.</p>
+                                </b:column>
+                            </b:row>
+
+                            <b:row id="data-customizado" styleClass="bottom-30">
+                                <b:column styleClass="app-label">
+                                    <div class="bold">
+                                        <p class="badge">Item de Pauta:</p>
+                                        <p>#{votacaoBean.votacao.itemDePauta.descricao}</p>
+                                    </div>
+                                </b:column>
+                            </b:row>
+
+                            <b:row rendered="#{votacaoBean.votacao.itemDePauta.temSegundoTurno}">
+                                <b:column style="margin-bottom: 50px;">
+                                    <ul class="turnos">
+                                        <li class="turnos-item">
+                                            <button type="button" class="btn btn-default btn-round">Primeiro Turno
+                                            </button>
+                                        </li>
+                                        <li class="turnos-item">
+                                            <button type="button" class="btn btn-default btn-round">Segundo Turno
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </b:column>
+                            </b:row>
+
+                            <b:row styleClass="bottom-30" rendered="#{votacaoBean.votacao.status == 'ABERTA'}">
+                                <b:column>
+                                    <div style="padding-top: 80px; padding-bottom: 150px">
+                                        <p class="app-h2-description">Aguardando resultado...</p>
+                                    </div>
+                                </b:column>
+                            </b:row>
+
+                            <b:row styleClass="bottom-30" rendered="#{votacaoBean.votacao.status == 'FINALIZADA'}">
+                                <b:column class="bold" styleClass="app-label">
+                                    <p class="badge">Resultados:</p>
+                                </b:column>
+
+                                <b:column styleClass="bottom-30">
+
+                                    <table class="resultado">
+                                        <thead>
+                                        <tr>
+                                            <th>POSIÇÃO</th>
+                                            <th>ENCAMINHAMENTO</th>
+                                            <th>VOTOS</th>
+                                            <th>PERCENTUAL</th>
+                                        </tr>
+                                        <tr style="background-color: #fff">
+                                            <td colspan="4" style="padding: 5px; border: none"></td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <prime:repeat
+                                                value="#{votacaoBean.votacao.resultado.resultadosDoEncaminhamentos}"
+                                                var="resultado">
+                                            <tr>
+                                                <td>1º</td>
+                                                <td>#{resultado.encaminhamento.descricao}</td>
+                                                <td>#{resultado.quantidadeDeVotos}</td>
+                                                <td>#{resultado.porcentagem}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="1">
+                                                    Votantes:
+                                                </td>
+                                                <td style="text-align: left" colspan="3">
+                                                    <prime:repeat value="#{resultado.votantes}" var="votante">
+                                                        <span class="badge">#{votante.nome}</span>
+                                                    </prime:repeat>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="background-color: #fff">
+                                                <td colspan="4" style="padding: 5px; border: none"></td>
+                                            </tr>
+                                        </prime:repeat>
+                                        </tbody>
+                                    </table>
+
+                                </b:column>
+
+                            </b:row>
+
+                            <b:row>
+
+                                <b:modal id="confirma-encerramento" title="Confirmar Encerramento"
+                                         styleClass="modalConfirmaEncerramento"
+                                         closable="false" close-on-escape="false" backdrop="false">
+                                    <p>Deseja encerrar a votação?
+                                    </p>
+                                    <f:facet name="footer">
+                                        <b:commandButton
+                                                class="" value="Encerrar">
+                                        </b:commandButton>
+                                        <b:button value="Fechar" dismiss="modal"/>
+                                    </f:facet>
+                                </b:modal>
+
+                                <b:modal id="confirma-cancelamento" title="Cancelar Votação"
+                                         styleClass="modalCancelar"
+                                         closable="false" close-on-escape="false" backdrop="false">
+                                    <p>Deseja realmente cancelar a votação? Todos os votos serão excluídos.</p>
+                                    <f:facet name="footer">
+                                        <b:commandButton class="button2" value="Cancelar Votação"
+                                                         outcome="itens-de-pauta"
+                                                         action="#{votacaoBean.cancelarVotacao}"></b:commandButton>
+                                        <b:button value="Fechar" dismiss="modal"/>
+                                    </f:facet>
+                                </b:modal>
+                                <b:column colMd="3">
+                                    <b:button styleClass="button1 bottom-30" value="Cancelar Votação" look="default"
+                                              onclick="$('.modalCancelar').modal()"/>
+                                </b:column>
+                            </b:row>
+                        </b:column>
+                    </h:form>
+                </b:panel>
+            </b:column>
+
+        </b:row>
+
+    </b:container>
+
+</ui:decorate>
+</html>

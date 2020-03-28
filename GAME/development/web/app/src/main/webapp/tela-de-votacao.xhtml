@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+             xmlns:f="http://xmlns.jcp.org/jsf/core"
+             xmlns:p="http://java.sun.com/jsf/html"
+             template="template.xhtml"
+             xmlns:prime="http://primefaces.org/ui"
+             xmlns:b="http://bootsfaces.net/ui">
+
+    <b:container>
+        <b:row>
+            <b:column col-md="8" offset="2">
+                <b:panel styleClass="app-panel">
+                    <h:form id="form">
+                        <prime:growl id="growl" showDetail="true" sticky="true"/>
+
+                        <b:column col-md="10" offset="1">
+                            <b:row class="head">
+                                <b:column>
+                                    <h2 class="app-h2">Acompanhamento de Votação</h2>
+                                </b:column>
+                                <b:column col-md="10" offset="1">
+                                    <p class="app-h2-description bottom-30">Votação do Item de Pauta: Item de Pauta XZy,  Item de Pauta XZy,   Item de Pauta XZy</p>
+                                </b:column>
+                                <b:column>
+                                    <h2 class="app-h2">Aguardando Resultado.....</h2>
+                                </b:column>
+                                <b:column>
+                                    <h2 class="app-h2"> </h2>
+                                </b:column>
+                            </b:row>
+
+
+                        </b:column>
+                        <b:column>
+                            <b:row id="data-customizado" rendered="#{encaminhamentosBean.selecionaCustomizado}"
+                                   styleClass="bottom-30">
+                                <b:column styleClass="bottom-30">
+                                    <prime:dataList id="opt-lista" emptyMessage="Nenhum item adicionado."
+                                                    value="#{encaminhamentosBean.itemDePauta.encaminhamentos}"
+                                                    var="opt"
+                                                    type="ordered" styleClass="encaminhamentos-itens">
+                                        <f:facet name="header">
+                                            OPÇÕES
+                                        </f:facet>
+                                        <span class="opt-item">#{opt.descricao}</span>
+
+
+                                    </prime:dataList>
+                                </b:column>
+
+
+
+                            </b:row>
+
+                            <b:row>
+                                <b:modal id="confirma-encaminhamento" title="Confirmar Encaminhamento"
+                                         styleClass="modalConfirmaEncaminhamento"
+                                         closable="false" close-on-escape="false" backdrop="false">
+                                    <p>Deseja encerrar votação?
+                                    </p>
+                                    <f:facet name="footer">
+                                        <b:commandButton action="#{encaminhamentosBean.encaminharItemDePauta}"
+                                                         class="" value="Sim">
+                                        </b:commandButton>
+                                        <b:button value="Fechar" dismiss="modal"/>
+                                    </f:facet>
+                                </b:modal>
+
+                                <b:modal id="confirma-cancelamento" title="Cancelar"
+                                         styleClass="modalCancelar"
+                                         closable="false" close-on-escape="false" backdrop="false">
+                                    <p>Deseja realmente cancelar?</p>
+                                    <f:facet name="footer">
+                                        <b:button class="button2" value="Cancelar"
+                                                  outcome="itens-de-pauta"></b:button>
+                                        <b:button value="Fechar" dismiss="modal"/>
+                                    </f:facet>
+                                </b:modal>
+                                <b:column colMd="6">
+                                    <b:button styleClass="button1 bottom-30" value="Encerrar Votação" look="success"
+                                              onclick="$('.modalConfirmaEncaminhamento').modal()"/>
+                                </b:column>
+                                <b:column colMd="6">
+                                    <b:button styleClass="button1 bottom-30" value="Cancelar" look="default"
+                                              onclick="$('.modalCancelar').modal()"/>
+                                </b:column>
+                            </b:row>
+                        </b:column>
+                    </h:form>
+                </b:panel>
+            </b:column>
+
+        </b:row>
+
+    </b:container>
+
+</ui:decorate>
+</html>

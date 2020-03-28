@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html><ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+                   xmlns:h="http://xmlns.jcp.org/jsf/html"
+                   xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                   xmlns:f="http://xmlns.jcp.org/jsf/core"
+                   xmlns:p="http://java.sun.com/jsf/html"
+                   template="template.xhtml"
+                   xmlns:prime="http://primefaces.org/ui"
+                   xmlns:b="http://bootsfaces.net/ui">
+
+    <b:container>
+        <b:row>
+
+            <b:column col-md="8" offset="2">
+                <b:panel styleClass="app-panel">
+                    <h:form id="form">
+                        <prime:growl id="growl" showDetail="true" sticky="true"/>
+
+                        <b:column col-md="10" offset="1">
+                            <b:row class="head">
+                                <b:column>
+                                    <h2 class="app-h2">Cadastro de Itens de Pauta</h2>
+                                </b:column>
+                                <b:column col-md="10" offset="1">
+                                    <p class="app-h2-description bottom-30">Preencha as informações do Item de Pauta</p>
+                                </b:column>
+                            </b:row>
+
+                            <b:row>
+                                <b:column styleClass="text-campo">
+                                    <p class="required-txt bottom-30">* Campos obrigatórios</p>
+                                </b:column>
+                            </b:row>
+
+                            <b:row>
+                                <b:column>
+                                    <h:outputLabel styleClass="app-label" value="Descrição do Item *"></h:outputLabel>
+                                </b:column>
+                                <b:column>
+                                    <p>
+                                        <b:inputText styleClass="app-input bottom-30" rows="2"/>
+                                    </p>
+                                </b:column>
+                            </b:row>
+
+
+                            <b:row>
+                                <b:column>
+                                    <h:outputLabel value="Relator *"/>
+                                </b:column>
+                                <b:column colMd="15">
+                                    <b:selectOneMenu value="#{userData.data}" colMd="3" required="true" labelColMd="2">
+                                        <f:selectItem itemLabel="Amanda" itemValue=""/>
+                                        <f:selectItem itemLabel="Jean" itemValue="1"/>
+                                        <f:selectItem itemLabel="Igor" itemValue="2"/>
+                                        <f:selectItem itemLabel="Artur" itemValue="3"/>
+                                        <f:selectItem itemLabel="João" itemValue="4"/>
+                                    </b:selectOneMenu>
+                                </b:column>
+                            </b:row>
+
+                            <b:row>
+                                <b:column>
+                                    <h:outputLabel styleClass="app-label" value="Selecione a Ordem de Votação *"/>
+                                </b:column>
+                                <b:column colMd="15">
+                                    <b:selectOneMenu value="#{userData.data}" colMd="2" required="true" labelColMd="2">
+                                        <f:selectItem itemLabel="1" itemValue=""/>
+                                        <f:selectItem itemLabel="2" itemValue="1"/>
+                                        <f:selectItem itemLabel="3" itemValue="2"/>
+                                        <f:selectItem itemLabel="4" itemValue="3"/>
+                                        <f:selectItem itemLabel="5" itemValue="4"/>
+                                    </b:selectOneMenu>
+                                </b:column>
+                            </b:row>
+
+
+                            <b:row>
+                                <b:column styleClass="app-input bottom-30">
+                                <b:modal id="confirma-encaminhamento" title="Confirmar Salvamento de Item"
+                                         styleClass="modalConfirmaEncaminhamento"
+                                         closable="false" close-on-escape="false" backdrop="false">
+                                    <p>Deseja salvar o Item de Pauta?
+                                    </p>
+                                    <f:facet name="footer">
+                                        <b:commandButton action="#{algo.salvarItem}" includeViewParams="true"
+                                                         class="" value="Salvar">
+                                            <f:param name="item" value="#{algoBean.ITEM.id}"/>
+                                        </b:commandButton>
+                                        <b:button value="Fechar" dismiss="modal"/>
+                                    </f:facet>
+                                </b:modal>
+
+                                <b:modal id="confirma-cancelamento" title="Cancelar"
+                                         styleClass="modalCancelar"
+                                         closable="false" close-on-escape="false" backdrop="false">
+                                    <p>Deseja realmente cancelar?</p>
+                                    <f:facet name="footer">
+                                        <b:link class="btn btn-default button2" value="Cancelar"
+                                                includeViewParams="true"
+                                                outcome="itens-de-pauta">
+                                            <f:param name="reuniao" value="#{algoBean.item.item.id}"></f:param>
+                                        </b:link>
+                                        <b:button value="Fechar" dismiss="modal"/>
+                                    </f:facet>
+                                </b:modal>
+
+                                <b:column colMd="6">
+                                    <b:button styleClass="button1 bottom-30" value="Salvar" look="success"
+                                              onclick="$('.modalConfirmaEncaminhamento').modal()"/>
+                                </b:column>
+                                <b:column colMd="6">
+                                    <b:button styleClass="button1 bottom-30" value="Cancelar" look="default"
+                                              onclick="$('.modalCancelar').modal()"/>
+                                </b:column>
+                                </b:column>
+                            </b:row>
+                        </b:column>
+                    </h:form>
+                </b:panel>
+            </b:column>
+
+        </b:row>
+
+    </b:container>
+
+</ui:decorate>
+</html>

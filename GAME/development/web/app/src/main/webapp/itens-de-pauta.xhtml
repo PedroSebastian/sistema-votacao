@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+             xmlns:f="http://xmlns.jcp.org/jsf/core"
+             xmlns:p="http://java.sun.com/jsf/html"
+             template="template.xhtml"
+             xmlns:prime="http://primefaces.org/ui"
+             xmlns:b="http://bootsfaces.net/ui">
+    <style>
+        .ui-widget-content .ui-datatable-even, .ui-widget-content .ui-datatable-odd {
+
+        }
+
+        .ui-widget-content .ui-datatable-even:hover, .ui-widget-content .ui-datatable-odd:hover {
+            background-color: #e3e3e3;
+            border-left: 7px solid #00A0C6;
+            padding-left: 3px;
+            cursor: pointer;
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        .ui-orderlist .ui-orderlist-list li {
+            padding-left: 30px;
+            height: 50px !important;
+            vertical-align: middle;
+            border-bottom: 1px solid #e3e3e3;
+            padding-right: 25px;
+            display: table;
+            width: 100%;
+        }
+
+        .ui-orderlist .ui-orderlist-list li:hover {
+            background-color: #e3e3e3;
+            border-left: 7px solid #00A0C6;
+            padding-left: 23px;
+            cursor: pointer;
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        .ui-orderlist .ui-orderlist-list {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: visible;
+            height: auto;
+            width: 200px;
+        }
+
+        .ui-g-12 .ui-md-10 {
+            padding-right: 0 !important;
+            padding-left: 0 !important;
+        }
+
+        .ui-orderlist.ui-grid-responsive .ui-orderlist-controls .ui-button {
+            width: 80%;
+        }
+
+        .ui-button {
+            margin-right: 5px !important;
+        }
+
+        @media screen and (min-width: 40.063em) {
+            .ui-md-1, .ui-md-2, .ui-md-3, .ui-md-4, .ui-md-5, .ui-md-6, .ui-md-7, .ui-md-8, .ui-md-9, .ui-md-10, .ui-md-11, .ui-md-12 {
+                padding: 0;
+            }
+        }
+
+    </style>
+
+    <b:container>
+
+        <div style="padding-bottom: 15px; margin-left: -45px;">
+            <span style="font-size: 11px"> Você está em: <a
+                    href="dashboard.xhtml"><u>Pagina Inicial</u></a> <span> > </span>
+            <a href="reunioes.jsf"><u>Reuniões</u></a> <span> > </span>
+            <a href="#"><u>Itens de Pauta</u></a>
+            </span>
+        </div>
+
+        <b:row>
+
+            <b:column col-md="8" offset="2">
+                <b:panel styleClass="app-panel">
+                    <h:form id="form">
+                        <prime:growl id="growl" showDetail="true" sticky="true"/>
+
+                        <b:column col-md="10" offset="1">
+                            <b:row class="head">
+                                <b:column>
+                                    <h2 class="app-h2">Itens de Pauta</h2>
+                                </b:column>
+                                <b:column col-md="10" offset="1">
+                                    <p class="app-h2-description bottom-30">Clique em um item de pauta para ir até a página de adição de encaminhamentos</p>
+                                </b:column>
+                            </b:row>
+
+                            <prime:dialog id="modal-item" header="Cadastrar Item de Pauta" widgetVar="modal-item"
+                                          resizable="false"
+                                          modal="true">
+                                <h:panelGrid columns="2" cellpadding="5">
+
+                                    <h:outputLabel style="margin-right: 10px" for="descricao" value="Descrição: *"/>
+                                    <prime:inputText id="descricao" styleClass="bottom-30"
+                                                     value="#{itensDePautaBean.novoItemDePauta.descricao}"
+                                                     required="true">
+                                        <prime:ajax event="keyup" update="btnSalvar"/>
+                                    </prime:inputText>
+
+                                    <h:outputLabel style="margin-right: 10px" for="relator" value="Relator: *"/>
+                                    <prime:inputText id="relator" styleClass="bottom-30"
+                                                     value="#{itensDePautaBean.novoItemDePauta.relator}"
+                                                     required="true">
+                                        <prime:ajax event="keyup" update="btnSalvar"/>
+                                    </prime:inputText>
+
+                                    <prime:outputLabel for="console" value="Ordem:"/>
+                                    <prime:selectOneMenu id="console" value="#{itensDePautaBean.ordem}"
+                                                         styleClass="bottom-30" style="width: 100%">
+                                        <f:selectItems value="#{itensDePautaBean.ordens}"/>
+                                    </prime:selectOneMenu>
+
+                                    <f:facet name="footer">
+                                        <prime:commandButton disabled="#{itensDePautaBean.novoItemDePauta.descricao == null ||
+                                        itensDePautaBean.novoItemDePauta.descricao == '' || itensDePautaBean.novoItemDePauta.relator == ''
+                                        || itensDePautaBean.novoItemDePauta.relator == null}" id="btnSalvar"
+                                                             value="Salvar" process="@form:modal-item"
+                                                             actionListener="#{itensDePautaBean.salvarNovoITtem}"
+                                                             update="@form:itens-lista, @form:modal-item, @form:growl"/>
+                                    </f:facet>
+                                </h:panelGrid>
+                            </prime:dialog>
+
+                            <prime:dialog id="modal-item-editar" header="Editar Item de Pauta"
+                                          widgetVar="modal-item-editar"
+                                          resizable="false"
+                                          modal="true">
+                                <h:panelGrid columns="2" cellpadding="5">
+
+                                    <h:outputLabel style="margin-right: 10px" for="descricao" value="Descrição: *"/>
+                                    <prime:inputText id="descricao-editar" styleClass="bottom-30"
+                                                     value="#{itensDePautaBean.itemSelecionado.descricao}"
+                                                     required="true">
+                                        <prime:ajax event="keyup" update="btnSalvar"/>
+                                    </prime:inputText>
+
+                                    <h:outputLabel style="margin-right: 10px" for="relator" value="Relator: *"/>
+                                    <prime:inputText id="relator-editar" styleClass="bottom-30"
+                                                     value="#{itensDePautaBean.itemSelecionado.relator}"
+                                                     required="true">
+                                        <prime:ajax event="keyup" update="btnSalvar"/>
+                                    </prime:inputText>
+
+                                    <prime:outputLabel for="console" value="Ordem:"/>
+                                    <prime:selectOneMenu id="ordem-editar"
+                                                         value="#{itensDePautaBean.itemSelecionado.ordem}"
+                                                         styleClass="bottom-30" style="width: 100%">
+                                        <f:selectItems value="#{itensDePautaBean.ordensEdicao}"/>
+
+                                        <prime:ajax event="change" update="@form:itens-lista, @this"/>
+
+                                    </prime:selectOneMenu>
+
+                                    <f:facet name="footer">
+                                        <prime:commandButton disabled="#{itensDePautaBean.itemSelecionado.descricao == null ||
+                                        itensDePautaBean.itemSelecionado.descricao == '' || itensDePautaBean.itemSelecionado.relator == ''
+                                        || itensDePautaBean.itemSelecionado.relator == null}" id="btnEditar"
+                                                             value="Salvar" process="@form:modal-item-editar"
+                                                             actionListener="#{itensDePautaBean.editarItem}"
+                                                             update="@form:itens-lista, @form:modal-item-editar, @form:delete-btn, @form:edit-btn, @form:encaminhamento-link, @form:growl"/>
+                                    </f:facet>
+                                </h:panelGrid>
+                            </prime:dialog>
+
+                            <prime:dialog id="modal-item-deletar" header="Deletar Item de Pauta"
+                                          widgetVar="modal-item-deletar"
+                                          resizable="false"
+                                          modal="true">
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <h4 style="text-align: center; padding-bottom: 15px; padding-top: 10px">Deseja mesmo excluir este Item?</h4>
+                                    <p class="bottom-30"
+                                       style="text-align: center; padding-bottom: 15px; padding-top: 10px; max-width: 350px">
+                                        #{itensDePautaBean.itemSelecionado.descricao}
+                                    </p>
+                                </h:panelGrid>
+                                <f:facet name="footer">
+                                    <div style="text-align: center; margin: 20px">
+                                    <prime:commandButton style="background:#c13931; color: white" value="Sim"
+                                                         process="@form:modal-item-deletar"
+                                                         actionListener="#{itensDePautaBean.deletaIttem}"
+                                                         update="@form:itens-lista, @form:modal-item-deletar, @form:delete-btn, @form:edit-btn, @form:encaminhamento-link, @form:growl"/>
+                                        <span style="padding-right: 46px; padding-left: 46px"></span>
+                                <prime:commandButton value="não"
+                                                         process="@form:modal-item-deletar"
+                                                         actionListener="#{itensDePautaBean.deletaIttem}"
+                                                         update="@form:itens-lista, @form:modal-item-deletar, @form:delete-btn, @form:edit-btn, @form:encaminhamento-link, @form:growl"/>
+                                    </div>
+                                </f:facet>
+                            </prime:dialog>
+
+                            <b:row>
+                                <b:column colMd="2">
+                                    <p:commandButton styleClass="btn btn-success btn-sm" value="Novo Item" type="button"
+                                                     onclick="PF('modal-item').show();"/>
+                                </b:column>
+                                <b:column colMd="2">
+                                    <p:commandButton id="edit-btn"
+                                                     disabled="#{itensDePautaBean.itemSelecionado.id == null}"
+                                                     styleClass="btn btn-default btn-sm" value="Editar" type="button"
+                                                     onclick="PF('modal-item-editar').show();"/>
+                                </b:column>
+                                <b:column colMd="2">
+                                    <p:commandButton id="delete-btn"
+                                                     disabled="#{itensDePautaBean.itemSelecionado.id == null}"
+                                                     style="margin-left: -25px" styleClass="btn btn-danger btn-sm"
+                                                     value="Delete" type="button"
+                                                     onclick="PF('modal-item-deletar').show();"/>
+                                </b:column>
+                                <b:column colMd="6">
+                                    <!--<b:inputText fieldSize="sm" id="mybid" class="mybid-example"-->
+                                    <!--placeholder="Pesquisar">-->
+                                    <!--<f:facet name="append">-->
+                                    <!--<b:button size="sm"-->
+                                    <!--style="background-image: linear-gradient(to bottom, #7cb67e 0%, #7cb67e 100%);background-repeat: inherit;color: #fff;font-weight: bold; border-color: #7cb67e;"-->
+                                    <!--look="primary" value="Pesquisar"-->
+                                    <!--onclick="$('.mybid-example').val('');return false;"/>-->
+                                    <!--</f:facet>-->
+                                    <!--</b:inputText>-->
+                                    <prime:link id="encaminhamento-link"
+                                                       disabled="#{itensDePautaBean.itemSelecionado.id == null}"
+                                                       styleClass="btn btn-default bottom-30"
+                                                       value="Adicionar Encaminhamentos"
+                                                       includeViewParams="true"
+                                                       outcome="encaminhamentos">
+                                        <f:param name="item" value="#{itensDePautaBean.itemSelecionado.id}"></f:param>
+                                    </prime:link>
+                                </b:column>
+                            </b:row>
+                            <div style="padding-bottom: 10px">
+                                * Selecione um item abaixo para usar as opções ou arraste para reordenar:
+                            </div>
+                            <b:row styleClass="bottom-30">
+                                <b:column>
+                                    <prime:dataTable id="itens-lista" var="item" value="#{itensDePautaBean.itens}"
+                                                     draggableRows="true" selectionMode="single"
+                                                     selection="#{itensDePautaBean.itemSelecionado}"
+                                                     rowKey="#{item.id}" emptyMessage="Nenhum item de pauta cadastrado">
+                                        <prime:ajax event="rowReorder" listener="#{itensDePautaBean.onRowReorder}"
+                                                    update=":form"/>
+                                        <f:facet name="caption">
+                                            ITEM DE PAUTA
+                                        </f:facet>
+
+                                        <prime:ajax event="rowSelect" listener="#{itensDePautaBean.onRowSelect}"
+                                                    update=":form"/>
+
+                                        <prime:column headerText="Ordem">
+                                            <h:outputText value="#{item.ordem}"/>
+                                        </prime:column>
+
+                                        <prime:column colspan="4" headerText="Descrição do Item">
+                                            <h:outputText value="#{item.descricao}"/>
+                                        </prime:column>
+
+                                        <prime:column headerText="Relator">
+                                            <h:outputText value="#{item.relator}"/>
+                                        </prime:column>
+                                    </prime:dataTable>
+                                </b:column>
+                            </b:row>
+                        </b:column>
+                    </h:form>
+                </b:panel>
+            </b:column>
+        </b:row>
+    </b:container>
+</ui:decorate>
+</html>

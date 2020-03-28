@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://java.sun.com/jsf/html"
+      xmlns:prime="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui">
+
+
+<h:head>
+    <title>Reuniões</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://icons8.com"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"/>
+    <h:outputStylesheet library="css" name="styles.css"/>
+</h:head>
+<h:body>
+    <b:navBar brand-img="#{request.contextPath}/resources/images/logo.png"
+              brandImgStyleClass="logo" alt="Reuniões" brandHref="#" fluid="true">
+        <div style="text-align: right; margin-top: 15px">
+            <a href="#"><img style=" max-width: 30px; max-height: 30px; margin-right: 20px"
+                             src="https://png.icons8.com/cotton/50/000000/gender-neutral-user.png" alt="">
+            </img></a>
+            <a href="#"><u>Sair</u></a>
+        </div>
+    </b:navBar>
+
+    <ui:insert></ui:insert>
+
+    <script type="text/javascript">
+        $(function () {
+            var links = $('a.app-option').click(function () {
+                links.removeClass('active');
+                $(this).addClass('active');
+            });
+        });
+    </script>
+</h:body>
+</html>

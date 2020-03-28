@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+             xmlns:f="http://xmlns.jcp.org/jsf/core"
+             xmlns:p="http://java.sun.com/jsf/html"
+             template="template.xhtml"
+             xmlns:prime="http://primefaces.org/ui"
+             xmlns:b="http://bootsfaces.net/ui">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{taskBean.listAllTasks}"/>
+    </f:metadata>
+
+    <b:container>
+        <b:row>
+            <b:column col-md="10" offset="1">
+                <b:panel styleClass="app-panel">
+                    <h3 class="no-margin">Lista de Tarefas</h3>
+                </b:panel>
+            </b:column>
+        </b:row>
+
+        <b:row styleClass="show-grid">
+            <b:column col-md="10" offset="1">
+                <b:panel styleClass="app-panel panel-list">
+                    <h:form id="form">
+
+                        <prime:dataList emptyMessage="Você não possui nenhuma tarefa." class=""
+                                        value="#{taskBean.tasks}"
+                                        var="task" type="unordered" paginator="true" rows="15">
+                            <f:facet name="header">
+                                Tarefas
+                            </f:facet>
+                            <prime:commandLink update=":form:taskDetail" styleClass="task-item-link"
+                                               oncomplete="PF('taskDialog').show()">
+                                <f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}"/>
+                                #{task.title}
+                            </prime:commandLink>
+                        </prime:dataList>
+
+                        <prime:dialog header="Tarefa" widgetVar="taskDialog" modal="true" resizable="false"
+                                      height="320" width="470" styleClass="task-modal">
+                            <prime:outputPanel id="taskDetail" style="text-align:center;">
+                                <prime:panel styleClass="modal-task-panel-title" columns="1"
+                                             rendered="#{not empty taskBean.selectedTask}">
+                                    <h:outputText value="#{taskBean.selectedTask.title}"></h:outputText>
+                                </prime:panel>
+                                <prime:panel header="Descrição" styleClass="modal-task-panel-description" columns="1"
+                                             rendered="#{not empty taskBean.selectedTask}">
+                                    <h:outputText value="#{taskBean.selectedTask.description}"></h:outputText>
+                                </prime:panel>
+
+                                <prime:panel styleClass="modal-task-panel-buttons" columns="1"
+                                             rendered="#{not empty taskBean.selectedTask}">
+                                    <b:commandButton size="sm" value="Concluir"
+                                                     look="success" styleClass="btn-round" style="width:80px"/>
+                                    <b:link style="margin-left: 15px" styleClass="btn btn-default btn-round" onclick="alert('Editar!'); return false;"
+                                            value="Editar"/>
+                                </prime:panel>
+                            </prime:outputPanel>
+                        </prime:dialog>
+                    </h:form>
+                </b:panel>
+            </b:column>
+        </b:row>
+    </b:container>
+</ui:decorate>
+</html>

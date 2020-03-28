@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+             xmlns:f="http://xmlns.jcp.org/jsf/core"
+             xmlns:p="http://java.sun.com/jsf/html"
+             template="template.xhtml"
+             xmlns:prime="http://primefaces.org/ui"
+             xmlns:b="http://bootsfaces.net/ui">
+
+    <b:container>
+
+        <div style="padding-bottom: 15px; margin-left: -45px;">
+            <span style="font-size: 11px"> Você está em: <a href="dashboard.xhtml"><u>Pagina Inicial</u></a> <span> > </span>
+            <a href="#"><u>Reuniões</u></a>
+            </span>
+        </div>
+
+        <b:row>
+            <b:column col-md="8" offset="2">
+                <b:panel styleClass="app-panel">
+                    <h:form id="form">
+                        <b:column col-md="10" offset="1">
+                            <b:row class="head">
+                                <b:column>
+                                    <h2 class="app-h2">Reuniões</h2>
+                                </b:column>
+                                <b:column col-md="10" offset="1">
+                                    <p class="app-h2-description bottom-30">Selecione uma Reunião para encaminhar itens de pauta para os membros</p>
+                                </b:column>
+                            </b:row>
+
+                            <b:row styleClass="bottom-30">
+                                <b:column>
+                                    <prime:dataList id="opt-lista" emptyMessage="Nenhuma reunião disponível"
+                                                    value="#{reuniaoBean.reunioes}" var="reuniao"
+                                                    rowIndexVar="listRowIndex"
+                                                    type="ordered" lazy="true">
+                                        <f:facet name="header">
+                                            REUNIÕES DISPONÍVEIS
+                                        </f:facet>
+                                        <b:link styleClass="item-link" includeViewParams="true"
+                                                outcome="itens-de-pauta">
+                                            <f:param name="reuniao" value="#{reuniao.id}"></f:param>
+                                            #{reuniao.descricao}
+                                        </b:link>
+                                    </prime:dataList>
+                                </b:column>
+                            </b:row>
+                        </b:column>
+                    </h:form>
+                </b:panel>
+            </b:column>
+
+        </b:row>
+
+    </b:container>
+
+</ui:decorate>
+</html>

@@ -1,0 +1,54 @@
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>Votar no Item de Pauta</ion-title>
+
+        <ion-buttons style="margin: 0 0.4rem;" end>
+            <button outline ion-button (click)="showAlert()">
+                Sair
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <div *ngIf="(itemDePauta === null || itemDePauta === '')">
+        <p>Aguardande o encaminhamento...</p>
+    </div>
+
+    <ion-grid *ngIf="!(itemDePauta === null || itemDePauta === '')">
+        <ion-row>
+            <ion-col>
+                <h3>
+                    {{ itemDePauta.descricao }}
+                </h3>
+            </ion-col>
+        </ion-row>
+
+        <ion-row>
+            <ion-col>
+                <form (submit)="submeterVoto(encaminhamentoSelecionado)" [formGroup]="opcoesForm">
+                    <ion-list radio-group formControlName="opcaoDeVoto">
+                        <ion-list-header class="no-padding-left">
+                            OPÇÕES
+                        </ion-list-header>
+
+                        <ion-item class="no-padding-left" *ngFor="let encaminhamento of itemDePauta.encaminhamentos">
+                            <ion-label>{{ encaminhamento.descricao }}</ion-label>
+                            <ion-radio value="{{ encaminhamento.id }}" (click)="seleciona(encaminhamento)"></ion-radio>
+                        </ion-item>
+
+                    </ion-list>
+
+                    <button [disabled]="encaminhamentoSelecionado == null" style="margin-top: 30px" type="submit"
+                            ion-button full>{{ submeterVotoBtnTxt }}
+                    </button>
+                </form>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>
